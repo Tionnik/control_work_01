@@ -25,7 +25,7 @@ def show():                                                                     
 
 def add():                                                                      # Добавление новой записи в файл
     now=datetime.now()                                                          # текущее время
-    new_id=now.strftime("%Y%m%d%H%M%S")                                             # 
+    new_id=now.strftime("%Y%m%d%H%M%S")                                         # 
     date=now.strftime("%d.%m.%Y %H:%M")                                         # Запись текущего времени в строку
     name=input("Введите название заметки: ")
     notes=input("Напишите заметку: ")
@@ -44,9 +44,9 @@ def edit():                                                                   # 
                         base2.write(info)
                     else:
                         print(info)
-                        now=datetime.now()                                                          # текущее время
-                        new_id=now.strftime("%Y%m%d%H%M%S")                                             # 
-                        date=now.strftime("%d.%m.%Y %H:%M")                                         # Запись текущего времени в строку
+                        now=datetime.now()                                                          
+                        new_id=now.strftime("%Y%m%d%H%M%S")                                              
+                        date=now.strftime("%d.%m.%Y %H:%M")                                         
                         name=input("Введите новое название заметки: ")
                         notes=input("Напишите заметку: ")
                         no_whrite=input("Если хотите изменить заметку наберите [1], если нет наберите [0] ")
@@ -76,7 +76,7 @@ def delete():                                                                   
 
 
 FILE_PATH = r"control_work_01\base.txt"                                             # Начальная база
-FILE_PATH_TEMP = r"control_work_01\base_temp.txt"
+FILE_PATH_TEMP = r"control_work_01\base_temp.txt"                                   # Временная база
 
 while True:
     print()                                                                 # Печать списка допустимых команд
@@ -100,5 +100,3 @@ while True:
     elif Command==5:
         delete()
     else: break
-
-    # implemented
