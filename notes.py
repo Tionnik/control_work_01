@@ -1,5 +1,6 @@
 
 from datetime import datetime
+import os
 
 ''' Приложение должно запускаться без ошибок, должно уметь сохранять данные в файл,
 уметь читать данные из файла, делать выборку по дате, выводить на экран выбранную запись, 
@@ -14,25 +15,68 @@ from datetime import datetime
 можно делать как параметры запуска программы (команда, данные),
 можно делать как запрос команды с консоли и последующим вводом данных, как-то ещё, на усмотрение студента.
 '''
+def id(line):                                                                   # Извлечение id из строки
+   mass = line.split(";")
+   return int (mass[0])
+
 def show():                                                                     # Печать всей базы
     with open(FILE_PATH,'r',encoding='utf-8') as base:
         print(base.read())
 
 def add():                                                                      # Добавление новой записи в файл
-    with open(FILE_PATH, 'r') as file:                                          # Считает количество строк в файле и нумерует их 
-        id=str(len(file.readlines())+1)
-    name=input("Введите название заметки: ")
     now=datetime.now()                                                          # текущее время
+    new_id=now.strftime("%Y%m%d%H%M%S")                                             # 
     date=now.strftime("%d.%m.%Y %H:%M")                                         # Запись текущего времени в строку
+    name=input("Введите название заметки: ")
     notes=input("Напишите заметку: ")
 
     with open(FILE_PATH,'a',encoding='utf-8') as base:
-        base.write(id+';'+name+';'+date+';'+notes+'\n')
+        base.write(new_id+';'+date+';'+name+';'+notes+'\n')
 
+def edit():                                                                   # Замена выбранной строки
+    index=int(input("Введите id строки для замены: "))
+    with open(FILE_PATH,'r',encoding='utf-8') as base1:
+        with open(FILE_PATH_TEMP,'w',encoding='utf-8') as base2:
+            while True:
+                info=base1.readline()
+                if info:
+                    if index != id(info):
+                        base2.write(info)
+                    else:
+                        print(info)
+                        now=datetime.now()                                                          # текущее время
+                        new_id=now.strftime("%Y%m%d%H%M%S")                                             # 
+                        date=now.strftime("%d.%m.%Y %H:%M")                                         # Запись текущего времени в строку
+                        name=input("Введите новое название заметки: ")
+                        notes=input("Напишите заметку: ")
+                        no_whrite=input("Если хотите изменить заметку наберите [1], если нет наберите [0] ")
+                        if int (no_whrite) ==1:
+                            base2.write(new_id+';'+date+';'+name+';'+notes+'\n')
+                        else:
+                            base2.write(info)
+                else:
+                    break
+    os.remove(FILE_PATH)  
+    os.rename(FILE_PATH_TEMP,FILE_PATH)
 
+def delete():                                                                   # Удаление выбранной строки
+    index=int(input("Введите id строки: "))
+    with open(FILE_PATH,'r',encoding='utf-8') as base1:
+        with open(FILE_PATH_TEMP,'w',encoding='utf-8') as base2:
+            while True:
+                info=base1.readline()
+                if info:
+                    if index != id(info):
+                        base2.write(info)
+                else:
+                    break
+    os.remove(FILE_PATH)  
+    os.rename(FILE_PATH_TEMP,FILE_PATH)
+    print("Все готово")
 
 
 FILE_PATH = r"control_work_01\base.txt"                                             # Начальная база
+FILE_PATH_TEMP = r"control_work_01\base_temp.txt"
 
 while True:
     print()                                                                 # Печать списка допустимых команд
@@ -56,3 +100,5 @@ while True:
     elif Command==5:
         delete()
     else: break
+
+    # implemented
