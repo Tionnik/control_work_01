@@ -19,7 +19,7 @@ def id(line):                                                                   
    mass = line.split(";")
    return int (mass[0])
 
-def time_code():                                                                # Формирует из времени в id для поиска строки
+def time_code():                                                                # Формирует id из времени для формирования списка поиска сообщений
     now=datetime.now()
     year = input("Введите полный год: ")
     if year == "": year=now.strftime("%Y")
@@ -37,15 +37,15 @@ def show():                                                                     
 
 def add():                                                                      # Добавление новой записи в файл
     now=datetime.now()                                                          # текущее время
-    new_id=now.strftime("%Y%m%d%H%M%S")                                         # ID формируется из времени создания или редактирования
-    date=now.strftime("%d.%m.%Y %H:%M")                                         # Запись текущего времени в строку
+    new_id=now.strftime("%Y%m%d%H%M%S")                                         # формируется id из времени создания или редактирования
+    date=now.strftime("%d.%m.%Y %H:%M")                                         # Формирование текущего времени для записи в строку
     name=input("Введите название заметки: ")
     notes=input("Напишите заметку: ")
 
     with open(FILE_PATH,'a',encoding='utf-8') as base:
         base.write(new_id+';'+date+';'+name+';'+notes+'\n')
 
-def search():
+def search():                                                                   # Формирование списка запроса заметок по времени
     print("[1] Вывести все сообщения ДО введенного времени")
     print("[2] Вывести все сообщения ПОСЛЕ введенного времени")
     print("[3] Вывести все сообщения в промежутке введенного времени")
@@ -84,31 +84,31 @@ def search():
                 else:
                     break
 
-def edit():                                                                   # Замена выбранной строки
+def edit():                                                                   # Изменение найденой записи
     index=int(input("Введите id строки для замены: "))
-    with open(FILE_PATH,'r',encoding='utf-8') as base1:
-        with open(FILE_PATH_TEMP,'w',encoding='utf-8') as base2:
+    with open(FILE_PATH,'r',encoding='utf-8') as base1:                       # Открытие файла на чтение текущей базы
+        with open(FILE_PATH_TEMP,'w',encoding='utf-8') as base2:              # Открытие файла для записи новой базы
             while True:
                 info=base1.readline()
                 if info:
-                    if index != id(info):
+                    if index != id(info):                                     # Переписывает всю базу до тех пор пока не найдет запись для изменения
                         base2.write(info)
                     else:
-                        print(info)
+                        print(info)                                           # Печатает найденую заметку (чтобы пользователь не ошибся в изменениях)
                         now=datetime.now()                                                          
-                        new_id=now.strftime("%Y%m%d%H%M%S")                                              
-                        date=now.strftime("%d.%m.%Y %H:%M")                                         
+                        new_id=now.strftime("%Y%m%d%H%M%S")                   # Формирует новый id                          
+                        date=now.strftime("%d.%m.%Y %H:%M")                   # Формирует новое время изменения заметки                    
                         name=input("Введите новое название заметки: ")
                         notes=input("Напишите заметку: ")
-                        no_whrite=input("Если хотите изменить заметку наберите [1], если нет наберите [0] ")
+                        no_whrite=input("Если хотите изменить заметку наберите [1], если нет наберите [0] ") # Запрашивает подтверждение на изменение заметки
                         if int (no_whrite) ==1:
-                            base2.write(new_id+';'+date+';'+name+';'+notes+'\n')
+                            base2.write(new_id+';'+date+';'+name+';'+notes+'\n') # Изменяет заметки
                         else:
-                            base2.write(info)
+                            base2.write(info)                                 # Переписывает остаток базы в новый временный файл
                 else:
                     break
-    os.remove(FILE_PATH)  
-    os.rename(FILE_PATH_TEMP,FILE_PATH)
+    os.remove(FILE_PATH)                                                      # Удаляет старую базу
+    os.rename(FILE_PATH_TEMP,FILE_PATH)                                       # Переименовывает временную базу в текущию
 
 def delete():                                                                   # Удаление выбранной строки
     index=int(input("Введите id строки: "))
